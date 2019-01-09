@@ -1,0 +1,24 @@
+sudo: required
+services: 
+  - docker
+
+before_install:
+  - docker build -t ameywalke/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run ameywalke/react-test npm test -- --coverage
+
+after_install:
+  - docker build -t ameywalke/multi-client ./client
+  - docker build -t ameywalke/multi-nginx ./nginx
+  - docker build -t ameywalke/multi-server ./server
+  - docker build -t ameywalke/multi-worker ./worker
+
+#Login into docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+#Take those images and push them to docker hub
+  - docker push ameywalke/multi-client
+  - docker push ameywalke/multi-nginx
+  - docker push ameywalke/multi-server
+  - docker push ameywalke/multi-worker
