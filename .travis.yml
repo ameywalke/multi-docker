@@ -8,7 +8,7 @@ before_install:
 script:
   - docker run ameywalke/react-test npm test -- --coverage
 
-after_install:
+after_success:
   - docker build -t ameywalke/multi-client ./client
   - docker build -t ameywalke/multi-nginx ./nginx
   - docker build -t ameywalke/multi-server ./server
